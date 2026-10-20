@@ -1,0 +1,60 @@
+# Local full-stack run: backend, then frontend once the backend is healthy.
+#
+#   cp .env.example .env        # set API_KEYS and optionally WORKSPACE_DIR
+#   docker compose up --build
+#
+# UI: http://localhost:8080   API (through nginx): http://localhost:8080/api/health
+
+name: userstoryai
+
+services:
+  backend:
+    build:
+      context: ./backend
+    image: userstoryai/backend:0.4.0
+    environment:
+      WORKSPACE_ROOT: /workspace
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      AUTH_ENABLED: "true"
+      # JSON object of API key -> role, for example {"change-me-admin":"ADMIN"}. Required.
+      API_KEYS: ${API_KEYS:?Set API_KEYS in .env (see .env.example)}
+      LLM_PROVIDER: ${LLM_PROVIDER:-none}
+    volumes:
+      # Folder that contains the repositories to analyse. Mounted read-only.
+      - ${WORKSPACE_DIR:-..}:/workspace:ro
+    tmpfs:
+      - /tmp
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    image: userstoryai/frontend:0.4.0
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-8080}:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped

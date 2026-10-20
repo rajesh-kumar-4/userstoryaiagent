@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: userstoryai-config
+  labels:
+    app.kubernetes.io/part-of: userstoryai
+data:
+  WORKSPACE_ROOT: /workspace
+  LOG_LEVEL: INFO
+  AUTH_ENABLED: "true"
+  LLM_PROVIDER: none

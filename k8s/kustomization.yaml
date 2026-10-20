@@ -1,0 +1,26 @@
+# Apply with: kubectl apply -k k8s/
+# Create userstoryai-secrets separately (see secret.example.yaml); it is intentionally not listed here.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: userstoryai
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - workspace-pvc.yaml
+  - backend.yaml
+  - frontend.yaml
+  - frontend-hpa.yaml
+  - ingress.yaml
+
+# Override the image registry and tag per environment, for example:
+#   images:
+#     - name: userstoryai/backend
+#       newName: ghcr.io/your-org/userstoryai-backend
+#       newTag: 0.4.0
+images:
+  - name: userstoryai/backend
+    newTag: 0.4.0
+  - name: userstoryai/frontend
+    newTag: 0.4.0

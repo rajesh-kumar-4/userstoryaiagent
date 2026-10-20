@@ -1,0 +1,28 @@
+# Single ingress. The frontend nginx proxies /api to the backend Service, so only the
+# frontend needs to be exposed. Requires an NGINX ingress controller.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: userstoryai
+  labels:
+    app.kubernetes.io/part-of: userstoryai
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1m"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - userstoryai.example.com
+      secretName: userstoryai-tls
+  rules:
+    - host: userstoryai.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80

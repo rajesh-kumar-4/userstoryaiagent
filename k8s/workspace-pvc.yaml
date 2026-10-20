@@ -1,0 +1,16 @@
+# Repository workspace shared by the backend. Populate it with your repositories
+# (for example with a git-sync job or a CSI volume). ReadWriteMany is needed only if
+# several nodes must mount the claim; the backend itself mounts it read-only.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: userstoryai-workspace
+  labels:
+    app.kubernetes.io/part-of: userstoryai
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: REPLACE_WITH_RWX_STORAGE_CLASS
+  resources:
+    requests:
+      storage: 20Gi

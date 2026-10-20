@@ -1,0 +1,1 @@
+import{j as r,F as t}from"./index-DmEc2yBr.js";function s({level:n}){if(!n)return r.jsx(t,{variant:"muted",children:"Unknown"});const a=n==="LOW"||n==="MEDIUM"||n==="HIGH"||n==="CRITICAL";return r.jsx(t,{variant:a?n:"muted",children:n})}export{s as R};
