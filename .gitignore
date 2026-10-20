@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Build output
+dist/
+build/
+
+# Local config, IDE, logs, and data
+.env
+.idea/
+.vscode/
+*.log
+*.sqlite
+chroma_data/

@@ -1,1 +1,0 @@
-import{j as r,a8 as t,L as n,E as a}from"./index-DmEc2yBr.js";import{u}from"./use-selected-repository-CTz4CgKl.js";function f({children:s}){const{id:i,repo:o,query:e}=u();return i?e.isPending?r.jsx(n,{label:"Loading repository"}):e.isError?r.jsx(a,{error:e.error,onRetry:()=>{e.refetch()}}):o?r.jsx(r.Fragment,{children:s(o)}):r.jsx(t,{}):r.jsx(t,{})}export{f as R};
